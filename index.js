@@ -74,6 +74,18 @@ async function run() {
           res.send(orders);
         });
 
+        // Get An User API
+        app.get('/users/:email', async(req, res) => {
+          const email = req.params.email;
+          const query = { email: email };
+          const user = await usersCollection.findOne(query);
+          let isAdmin = false;
+          if(user?.role === 'admin') {
+            isAdmin = true;
+          }
+          res.json({ admin: isAdmin });
+        });
+
         // Insert A User API
         app.post('/users', async(req, res) => {
           const user = req.body;
@@ -82,10 +94,24 @@ async function run() {
           res.json(result);
         });
 
-        // Insert A Order API
+        // Insert An Order API
         app.post('/orders', async(req, res) => {
           const newOrder = req.body;
           const result = await ordersCollection.insertOne(newOrder);
+          res.json(result);
+        });
+
+        // Insert A Review API
+        app.post('/reviews', async(req, res) => {
+          const newReview = req.body;
+          const result = await reviewsCollection.insertOne(newReview);
+          res.json(result);
+        });
+
+        // Insert A Product API
+        app.post('/products', async(req, res) => {
+          const newProduct = req.body;
+          const result = await productsCollection.insertOne(newProduct);
           res.json(result);
         });
 
@@ -96,6 +122,17 @@ async function run() {
           const result = await ordersCollection.deleteOne(query);
           res.json(result);
         });
+
+        // Make An Admin API
+        app.put('/users/admin', async (req, res) => {
+          const user = req.body;
+          const filter = { email: user.email };
+          const updateDoc = { $set: { role: 'admin' } };
+          const result = await usersCollection.updateOne(filter, updateDoc); 
+          res.json(result);
+        });
+
+        
 
         // app.post('/appointments', async(req, res) => {
         //     const appointment = req.body;
