@@ -74,6 +74,13 @@ async function run() {
           res.send(orders);
         });
 
+        // Get All Orders API
+        app.get('/orders', async(req, res) => {
+          const cursor = ordersCollection.find({});
+          const orders = await cursor.toArray();
+          res.send(orders);
+        });
+
         // Get An User API
         app.get('/users/:email', async(req, res) => {
           const email = req.params.email;
@@ -131,70 +138,6 @@ async function run() {
           const result = await usersCollection.updateOne(filter, updateDoc); 
           res.json(result);
         });
-
-        
-
-        // app.post('/appointments', async(req, res) => {
-        //     const appointment = req.body;
-        //     const result = await productsCollection.insertOne(appointment);
-        //     res.json(result);
-        // });
-        
-        
-        // app.post('/users', async(req, res) => {
-        //   const user = req.body;
-        //   const result = await usersCollection.insertOne(user);
-        //   console.log(result);
-        //   res.json(result);
-        // });
-
-        // app.put('/users', async(req, res) => {
-        //   const user = req.body;
-        //   const filter = { email: user.email };
-        //   const options = { upsert: true };
-        //   const updateDoc = { $set: user };
-        //   const result = await usersCollection.updateOne(filter, updateDoc, options);
-        //   res.json(result); 
-        // });
-
-        // app.put('/users/admin', verifyToken, async(req, res) => {
-        //   const user = req.body;
-        //   console.log('put', req.decodedEmail);
-
-        //   const requester = req.decodedEmail;
-        //   if(requester) {
-        //     const requesterAccount = await usersCollection.findOne({ email: requester });
-        //     if(requesterAccount.role === 'admin') {
-        //       const filter = { email: user.email };
-        //       const updateDoc = { $set: { role: 'admin' } };
-        //       const result = await usersCollection.updateOne(filter, updateDoc);   
-        //       res.json(result);
-        //     }
-        //   }
-        //   else {
-        //     res.status(403).json({ message: 'You Do Not Have Access To Make Admin' });
-        //   }
-        // });
-
-        // app.get('/appointments', verifyToken, async(req, res) => {
-        //   const email = req.query.email;
-        //   const date = req.query.date;
-        //   const query = { email: email, date: date };
-        //   const cursor = productsCollection.find(query);
-        //   const appointments = await cursor.toArray();
-        //   res.json(appointments);
-        // });
-
-        // app.get('/users/:email', async(req, res) => {
-        //   const email = req.params.email;
-        //   const query = { email: email };
-        //   const user = await usersCollection.findOne(query);
-        //   let isAdmin = false;
-        //   if(user?.role === 'admin') {
-        //     isAdmin = true;
-        //   }
-        //   res.json({ admin: isAdmin });
-        // });
     } finally {
         // await client.close(); 
     }
